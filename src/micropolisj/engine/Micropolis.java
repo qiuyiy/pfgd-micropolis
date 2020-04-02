@@ -192,7 +192,7 @@ public class Micropolis
 	int acycle; //animation cycle (mod 960)
 
 	public CityEval evaluation;
-
+	
 	ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 
 	static final int VALVERATE = 2;
@@ -214,6 +214,7 @@ public class Micropolis
 	{
 		PRNG = DEFAULT_PRNG;
 		evaluation = new CityEval(this);
+		
 		init(width, height);
 		initTileBehaviors();
 	}
@@ -611,6 +612,8 @@ public class Micropolis
 			if (cityTime % TAXFREQ == 0) {
 				collectTax();
 				evaluation.cityEvaluation();
+				System.out.println("testSatisfaction");
+				System.out.println(evaluation.satisfaction);
 			}
 			break;
 
@@ -1737,7 +1740,70 @@ public class Micropolis
 		budget.roadFundEscrow -= b.roadFunded;
 		budget.fireFundEscrow -= b.fireFunded;
 		budget.policeFundEscrow -= b.policeFunded;
-
+		
+		int satis = evaluation.satisfaction;
+		
+		
+		if(satis >= 60) {
+			Random specRandom = new Random();
+			int spec = specRandom.nextInt(100);
+			if(spec <= 5) {
+				budget.specialPos = true;
+				
+			}			
+		}
+		
+		
+		if(satis <= 30) {
+			Random specRandom = new Random();
+			int spec = specRandom.nextInt(100);
+			if(spec <= 5) {
+				budget.specialNeg = true;
+				
+			}			
+		}
+		
+		
+		
+		if(satis >= 60) {
+			Random r = new Random();
+			int rand = r.nextInt(100);
+			if((rand + satis/10) > 50) {
+				Random amount = new Random();
+				int extraPercent = amount.nextInt(25) + 25;
+				double extra = ((double)(extraPercent))/100;
+				System.out.println("extra::: "+ extra);
+				budget.extraIncome = (int)(extra*(double)(b.taxIncome));
+				System.out.println("Collect extra tax");
+								
+			}
+			if(budget.specialPos == true) {
+				budget.extraIncome -= budget.roadFundEscrow/TAXFREQ;
+				System.out.println("Pos Special Case True");
+			}
+			//hist.extraIncome = rand;
+			
+		}
+		
+		if(satis <= 30) {
+			if(budget.specialNeg == true) {
+				budget.negIncome = b.taxIncome;
+				System.out.println("Neg Special Case True");
+			}else {
+				Random r2 = new Random();
+				int rand2 = r2.nextInt(100);
+				if((rand2 + satis/10) < 30) {
+					Random amount = new Random();
+					int extraPercent = amount.nextInt(20) + 10;
+					double neg = ((double)(extraPercent))/100;
+					budget.negIncome = (int)(neg*(double)(b.taxIncome));
+					System.out.println("Collect fewer tax");
+				}
+			}
+			
+		}
+		
+		
 		taxEffect = b.taxRate;
 		roadEffect = b.roadRequest != 0 ?
 			(int)Math.floor(32.0 * (double)b.roadFunded / (double)b.roadRequest) :
@@ -1748,6 +1814,8 @@ public class Micropolis
 		fireEffect = b.fireRequest != 0 ?
 			(int)Math.floor(1000.0 * (double)b.fireFunded / (double)b.fireRequest) :
 			1000;
+			
+		
 	}
 
 	public static class FinancialHistory
@@ -1756,17 +1824,97 @@ public class Micropolis
 		public int totalFunds;
 		public int taxIncome;
 		public int operatingExpenses;
+		public int extraIncome = 0;
+		public int negIncome = 0;
+		public boolean specialPos = false;
+		public boolean specialNeg = false;
 	}
 	public ArrayList<FinancialHistory> financialHistory = new ArrayList<FinancialHistory>();
 
 	void collectTax()
 	{
-		int revenue = budget.taxFund / TAXFREQ;
+		int revenue = (budget.taxFund)/ TAXFREQ + budget.extraIncome - budget.negIncome;
 		int expenses = -(budget.roadFundEscrow + budget.fireFundEscrow + budget.policeFundEscrow) / TAXFREQ;
 
 		FinancialHistory hist = new FinancialHistory();
 		hist.cityTime = cityTime;
-		hist.taxIncome = revenue;
+		
+		/*
+		int satis = evaluation.satisfaction;
+		
+		if(satis >= 60) {
+			Random specRandom = new Random();
+			int spec = specRandom.nextInt(100);
+			if(spec <= 5) {
+				hist.specialPos = true;
+				
+			}			
+		}
+		
+		
+		if(satis <= 30) {
+			Random specRandom = new Random();
+			int spec = specRandom.nextInt(100);
+			if(spec <= 5) {
+				hist.specialNeg = true;
+				
+			}			
+		}
+		
+		
+		
+		if(satis >= 60) {
+			Random r = new Random();
+			int rand = r.nextInt(100);
+			if((rand + satis/10) > 50) {
+				Random amount = new Random();
+				int extraPercent = amount.nextInt(25) + 25;
+				double extra = ((double)(extraPercent))/100;
+				hist.extraIncome = (int)(extra*(double)(hist.taxIncome));
+				System.out.println("Collect extra tax");
+								
+			}
+			if(hist.specialPos == true) {
+				hist.extraIncome -= budget.roadFundEscrow/TAXFREQ;
+				System.out.println("Pos Special Case True");
+			}
+			//hist.extraIncome = rand;
+			
+		}
+		
+		if(satis <= 30) {
+			if(hist.specialNeg == true) {
+				hist.negIncome = hist.taxIncome;
+				System.out.println("Neg Special Case True");
+			}else {
+				Random r2 = new Random();
+				int rand2 = r2.nextInt(100);
+				if((rand2 + satis/10) < 30) {
+					Random amount = new Random();
+					int extraPercent = amount.nextInt(20) + 10;
+					double neg = ((double)(extraPercent))/100;
+					hist.negIncome = (int)(neg*(double)(hist.taxIncome));
+					System.out.println("Collect fewer tax");
+				}
+			}
+			
+		}
+		*/
+		
+		hist.taxIncome = revenue ;
+				
+		System.out.println("supposed tax: " + hist.taxIncome);
+		
+		hist.extraIncome = budget.extraIncome;
+		hist.negIncome = budget.negIncome;
+		hist.specialPos = budget.specialPos;
+		hist.specialNeg = budget.specialNeg;
+		System.out.println("budget extra Income:" + budget.extraIncome);
+		System.out.println("hist extra Income:" + hist.extraIncome);
+		//hist.taxIncome = revenue + hist.extraIncome - hist.negIncome;
+		
+		
+		//System.out.println("tax"+hist.taxIncome);
 		hist.operatingExpenses = expenses;
 
 		cashFlow = revenue - expenses;
@@ -1779,6 +1927,11 @@ public class Micropolis
 		budget.roadFundEscrow = 0;
 		budget.fireFundEscrow = 0;
 		budget.policeFundEscrow = 0;
+		budget.negIncome = 0;
+		budget.extraIncome = 0;
+		budget.specialPos = false;
+		budget.specialNeg = false;
+		
 	}
 
 	/** Annual maintenance cost of each police station. */

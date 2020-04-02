@@ -267,7 +267,9 @@ public class CityEval
 		cityScore = (int)Math.round((cityScore + z) / 2.0);
 		deltaCityScore = cityScore - oldCityScore;
 	}
-
+	
+    public static int satisfaction;
+    
 	void doVotes()
 	{
 		cityYes = cityNo = 0;
@@ -278,6 +280,7 @@ public class CityEval
 				cityNo++;
 			}
 		}
+		satisfaction = cityYes;
 	}
 
 }
