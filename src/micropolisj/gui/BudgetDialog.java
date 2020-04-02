@@ -9,10 +9,12 @@
 package micropolisj.gui;
 
 import java.awt.*;
+
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.util.*;
+import java.util.Random;
 
 import micropolisj.engine.*;
 import static micropolisj.gui.MainWindow.formatFunds;
@@ -339,16 +341,30 @@ public class BudgetDialog extends JDialog
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.taxes_collected")), c0);
 		c0.gridy++;
+		balancePane.add(new JLabel(strings.getString("budgetdlg.extra_taxes_collected")), c0);
+		c0.gridy++;
+		balancePane.add(new JLabel(strings.getString("budgetdlg.negative_taxes_collected")), c0);
+		//budgetdlg.extra_taxes_collected
+		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.capital_expenses")), c0);
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.operating_expenses")), c0);
+		
+		c0.gridy++;
+		balancePane.add(new JLabel(strings.getString("budgetdlg.special_situations")), c0);
+		
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.cash_end")), c0);
+		
+		
+		//budgetdlg.special_situations
 
 		c1.anchor = GridBagConstraints.EAST;
 		c1.weightx = 0.25;
 		c1.gridx = 0;
-
+        
+		
+		
 		for (int i = 0; i < 2; i++) {
 
 			if (i + 1 >= engine.financialHistory.size()) {
@@ -357,9 +373,18 @@ public class BudgetDialog extends JDialog
 
 			Micropolis.FinancialHistory f = engine.financialHistory.get(i);
 			Micropolis.FinancialHistory fPrior = engine.financialHistory.get(i+1);
+			//System.out.println("totalFunds "+f.totalFunds);
 			int cashFlow = f.totalFunds - fPrior.totalFunds;
+			System.out.println("Cash flow: " + cashFlow);
+			//System.out.println("cashFlow "+cashFlow);
+			
+			
 			int capExpenses = -(cashFlow - f.taxIncome + f.operatingExpenses);
-
+			
+			//+ f.extraIncome - f.negIncome
+			//System.out.println("capExpense "+capExpenses);
+			//f.totalFunds = f.totalFunds + f.extraIncome - f.negIncome;
+			//System.out.println("totalFunds new "+f.totalFunds);
 			c1.gridx++;
 			c1.gridy = 0;
 
@@ -377,9 +402,24 @@ public class BudgetDialog extends JDialog
 			JLabel taxIncomeLbl = new JLabel();
 			taxIncomeLbl.setText(formatFunds(f.taxIncome));
 			balancePane.add(taxIncomeLbl, c1);
-
+			
+			System.out.println("extraTax " + f.extraIncome);
+			
+			c1.gridy++;
+			JLabel extrataxIncomeLbl = new JLabel();
+			extrataxIncomeLbl.setText(formatFunds(f.extraIncome));
+			balancePane.add(extrataxIncomeLbl, c1);
+			
+			c1.gridy++;
+			JLabel negtaxIncomeLbl = new JLabel();
+			negtaxIncomeLbl.setText(formatFunds(f.negIncome));
+			
+			//System.out.println("tax2 "+f.taxIncome);
+			balancePane.add(negtaxIncomeLbl, c1);
+			
 			c1.gridy++;
 			JLabel capExpensesLbl = new JLabel();
+			
 			capExpensesLbl.setText(formatFunds(capExpenses));
 			balancePane.add(capExpensesLbl, c1);
 
@@ -387,10 +427,33 @@ public class BudgetDialog extends JDialog
 			JLabel opExpensesLbl = new JLabel();
 			opExpensesLbl.setText(formatFunds(f.operatingExpenses));
 			balancePane.add(opExpensesLbl, c1);
-
+            
+			c1.gridy++;
+			JLabel specLbl = new JLabel();
+			if(f.specialPos == true) {
+				specLbl.setText("Someone paid for the rail/road maintainance!");
+			}else {
+				specLbl.setText("Nothing Special Happened. ");
+			}
+			
+			if(f.specialNeg == true) {
+				specLbl.setText("You didn't receive the entire tax!");
+			}else {
+				specLbl.setText("Nothing Special Happened. ");
+			}
+			
+			balancePane.add(specLbl, c1);
+			
+			
 			c1.gridy++;
 			JLabel newBalanceLbl = new JLabel();
-			newBalanceLbl.setText(formatFunds(f.totalFunds));
+			if(i == 0) {
+				newBalanceLbl.setText(formatFunds(f.totalFunds));
+			}else {
+				newBalanceLbl.setText(formatFunds(f.totalFunds));
+				
+			}
+			
 			balancePane.add(newBalanceLbl, c1);
 		}
 
