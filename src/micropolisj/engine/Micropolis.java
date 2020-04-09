@@ -1887,7 +1887,7 @@ public class Micropolis
 		budget.policeFundEscrow = 0;
 		budget.negIncome = 0;
 		budget.extraIncome = 0;
-		budget.specialPos = true;
+		budget.specialPos = false;
 		budget.specialNeg = false;
 		
 	}
