@@ -268,6 +268,7 @@ public class CityEval
 		deltaCityScore = cityScore - oldCityScore;
 	}
 	
+	// Save the satisfaction rate for generating extra/fewer tax
     public static int satisfaction;
     
 	void doVotes()

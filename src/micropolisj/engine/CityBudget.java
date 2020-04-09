@@ -38,9 +38,25 @@ public class CityBudget
 	 */
 	int policeFundEscrow;
 	
+	/**
+	 * Amount of extra income from tax collected annually.
+	 */
+	
 	int extraIncome = 0;
+	
+	/**
+	 * Amount of tax that fails to be collected annually.
+	 */
 	int negIncome = 0;
+	
+	/**
+	 * Whether there is any citizen paying for the entire year's rail/road maintenance fee in this year.
+	 */
 	boolean specialPos = false;
+	
+	/**
+	 * Whether the entire citizen refuse to pay tax in this year.
+	 */
 	boolean specialNeg = false;
 
 	CityBudget(Micropolis city)
