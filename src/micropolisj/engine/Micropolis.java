@@ -1773,6 +1773,7 @@ public class Micropolis
 		public int negIncome = 0;
 		public boolean specialPos = false;
 		public boolean specialNeg = false;
+		public int originalTax;
 	}
 	public ArrayList<FinancialHistory> financialHistory = new ArrayList<FinancialHistory>();
 
@@ -1808,12 +1809,14 @@ public class Micropolis
 			/*
 			 * Generate random number to decide whether the city will gain extra tax
 			 * */
-			if((rand + satis/5) > 50) {
+			if((rand + satis/5) > 60) {
 				Random amount = new Random();
 				int extraPercent = amount.nextInt(25) + 25;
 				double extra = ((double)(extraPercent))/100;
 				System.out.println("extra::: "+ extra);
 				budget.extraIncome += (int)(extra*(double)(budget.taxFund/TAXFREQ));	
+				
+				System.out.println("original Tax:" + budget.taxFund/TAXFREQ);
 			}
 			/*
 			 * positive special case: if lucky, you don't need to pay for transportation fund
@@ -1843,7 +1846,7 @@ public class Micropolis
 				/*
 				 * Generate random number to decide whether the city will lose some tax collected
 				 * */
-				if((rand2 + satis/3) < 60) {
+				if((rand2 + satis/3) < 50) {
 					Random amount = new Random();
 					int extraPercent = amount.nextInt(20) + 10;
 					double neg = ((double)(extraPercent))/100;
@@ -1853,6 +1856,8 @@ public class Micropolis
 			
 		}
 		
+		
+		
 		int revenue = (budget.taxFund)/ TAXFREQ + budget.extraIncome - budget.negIncome;
 		int expenses = -(budget.roadFundEscrow + budget.fireFundEscrow + budget.policeFundEscrow) / TAXFREQ;
 
@@ -1860,7 +1865,7 @@ public class Micropolis
 		hist.cityTime = cityTime;
 		
 		hist.taxIncome = revenue ;
-		
+		hist.originalTax = (budget.taxFund)/ TAXFREQ;
 		
 		hist.extraIncome = budget.extraIncome;
 		hist.negIncome = budget.negIncome;
@@ -1882,7 +1887,7 @@ public class Micropolis
 		budget.policeFundEscrow = 0;
 		budget.negIncome = 0;
 		budget.extraIncome = 0;
-		budget.specialPos = false;
+		budget.specialPos = true;
 		budget.specialNeg = false;
 		
 	}
