@@ -340,6 +340,10 @@ public class BudgetDialog extends JDialog
 		balancePane.add(new JLabel(strings.getString("budgetdlg.cash_begin")), c0);
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.taxes_collected")), c0);
+		
+		c0.gridy++;
+		balancePane.add(new JLabel(strings.getString("budgetdlg.original_taxes")), c0);
+		
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.extra_taxes_collected")), c0);
 		c0.gridy++;
@@ -392,6 +396,12 @@ public class BudgetDialog extends JDialog
 			JLabel taxIncomeLbl = new JLabel();
 			taxIncomeLbl.setText(formatFunds(f.taxIncome));
 			balancePane.add(taxIncomeLbl, c1);
+			
+			c1.gridy++;
+			JLabel originalTaxLbl = new JLabel();
+			
+			originalTaxLbl.setText(formatFunds(f.originalTax));
+			balancePane.add(originalTaxLbl, c1);
 			
 			
 			c1.gridy++;
