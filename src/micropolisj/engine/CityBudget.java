@@ -50,12 +50,12 @@ public class CityBudget
 	int negIncome = 0;
 	
 	/**
-	 * Whether there is any citizen paying for the entire year's rail/road maintenance fee in this year.
+	 * Whether there is any citizen paying for the entire year's rail/road maintenance fee (trans. fund) in this year.
 	 */
 	boolean specialPos = false;
 	
 	/**
-	 * Whether the entire citizen refuse to pay tax in this year.
+	 * Whether the entire citizen body refuses to pay tax in this year.
 	 */
 	boolean specialNeg = false;
 
