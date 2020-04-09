@@ -344,20 +344,16 @@ public class BudgetDialog extends JDialog
 		balancePane.add(new JLabel(strings.getString("budgetdlg.extra_taxes_collected")), c0);
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.negative_taxes_collected")), c0);
-		//budgetdlg.extra_taxes_collected
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.capital_expenses")), c0);
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.operating_expenses")), c0);
-		
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.special_situations")), c0);
-		
 		c0.gridy++;
 		balancePane.add(new JLabel(strings.getString("budgetdlg.cash_end")), c0);
 		
 		
-		//budgetdlg.special_situations
 
 		c1.anchor = GridBagConstraints.EAST;
 		c1.weightx = 0.25;
@@ -373,18 +369,12 @@ public class BudgetDialog extends JDialog
 
 			Micropolis.FinancialHistory f = engine.financialHistory.get(i);
 			Micropolis.FinancialHistory fPrior = engine.financialHistory.get(i+1);
-			//System.out.println("totalFunds "+f.totalFunds);
 			int cashFlow = f.totalFunds - fPrior.totalFunds;
-			System.out.println("Cash flow: " + cashFlow);
-			//System.out.println("cashFlow "+cashFlow);
 			
 			
 			int capExpenses = -(cashFlow - f.taxIncome + f.operatingExpenses);
 			
-			//+ f.extraIncome - f.negIncome
-			//System.out.println("capExpense "+capExpenses);
-			//f.totalFunds = f.totalFunds + f.extraIncome - f.negIncome;
-			//System.out.println("totalFunds new "+f.totalFunds);
+			
 			c1.gridx++;
 			c1.gridy = 0;
 
@@ -403,7 +393,6 @@ public class BudgetDialog extends JDialog
 			taxIncomeLbl.setText(formatFunds(f.taxIncome));
 			balancePane.add(taxIncomeLbl, c1);
 			
-			System.out.println("extraTax " + f.extraIncome);
 			
 			c1.gridy++;
 			JLabel extrataxIncomeLbl = new JLabel();
@@ -414,7 +403,6 @@ public class BudgetDialog extends JDialog
 			JLabel negtaxIncomeLbl = new JLabel();
 			negtaxIncomeLbl.setText(formatFunds(f.negIncome));
 			
-			//System.out.println("tax2 "+f.taxIncome);
 			balancePane.add(negtaxIncomeLbl, c1);
 			
 			c1.gridy++;
@@ -430,16 +418,16 @@ public class BudgetDialog extends JDialog
             
 			c1.gridy++;
 			JLabel specLbl = new JLabel();
+			/*
+			 * Switch the text displayed between different situations
+			 * */
 			if(f.specialPos == true) {
-				specLbl.setText("Someone paid for the rail/road maintainance!");
+				//System.out.println("good news");
+				specLbl.setText("Great! Someone paid for the trans. fund!");
+			}else if (f.specialNeg == true){
+				specLbl.setText("Bad news! You fail to collect any tax!");
 			}else {
-				specLbl.setText("Nothing Special Happened. ");
-			}
-			
-			if(f.specialNeg == true) {
-				specLbl.setText("You didn't receive the entire tax!");
-			}else {
-				specLbl.setText("Nothing Special Happened. ");
+				specLbl.setText("Nothing special happened this year.");
 			}
 			
 			balancePane.add(specLbl, c1);
